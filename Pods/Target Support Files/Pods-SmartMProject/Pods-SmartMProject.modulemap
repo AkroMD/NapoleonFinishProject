@@ -1,0 +1,6 @@
+framework module Pods_SmartMProject {
+  umbrella header "Pods-SmartMProject-umbrella.h"
+
+  export *
+  module * { export * }
+}
