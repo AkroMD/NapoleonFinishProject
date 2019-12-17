@@ -38,11 +38,15 @@ class MainController {
     }
     
     static func reloadCLient(completion: @escaping () -> Void) {
-        API.loadContacts { clients in
-            //Если пришли клиенты с сервера, то очищаем базу и заполняем прИшлыми
-            clearRealmBase()
-            for client in clients {
-                addClient(client: client)
+        API.loadContacts { result, clients in
+            if result {
+                //Если пришли клиенты с сервера, то очищаем базу и заполняем прИшлыми
+                DispatchQueue.main.async {
+                    clearRealmBase()
+                    for client in clients {
+                        addClient(client: client)
+                    }
+                }
             }
             completion()
         }

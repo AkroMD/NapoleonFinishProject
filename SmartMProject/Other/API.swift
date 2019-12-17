@@ -30,7 +30,7 @@ enum API {
         case login = "login"
     }
     
-    static func loadContacts(completion: @escaping ([Client]) -> Void) {
+    static func loadContacts(completion: @escaping (Bool, [Client]) -> Void) {
         let url = URL(string: baseURL + ".json")!
         let request = URLRequest(url: url)
         let storageName = ProfileCompanyController.profile.appleID
@@ -39,14 +39,20 @@ enum API {
             guard
                 let data = data,
                 let json = try? JSONSerialization.jsonObject(with: data, options: []) as? JSON
-            else { return }
+            else {
+                completion(false, [Client]())
+                return }
             
             guard
                 let baseJSON = json[storageName] as? JSON
-                else { return }
+                else {
+                    completion(false, [Client]())
+                    return }
             guard
                 let clientsJSON = baseJSON["clients"] as? JSON
-                else { return }
+                else {
+                    completion(false, [Client]())
+                    return }
             
             var contacts = [Client]()
             print(clientsJSON)
@@ -76,7 +82,7 @@ enum API {
             }
             
             DispatchQueue.main.async {
-                completion(contacts)
+                completion(true, contacts)
             }
         }
         task.resume()

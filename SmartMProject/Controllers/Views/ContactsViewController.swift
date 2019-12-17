@@ -17,6 +17,7 @@ class ContactsViewController: UIViewController {
     @IBOutlet weak var addButton: ImageButton!
     @IBOutlet weak var mainView: MainBackView!
     @IBOutlet var backView: BackroundView!
+    @IBOutlet weak var indicatorLoad: UIActivityIndicatorView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,9 +26,19 @@ class ContactsViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         
-        tableClients.reloadData()
+        indicatorLoad.isHidden = false
+        profileButton.isUserInteractionEnabled = false
+        addButton.isUserInteractionEnabled = false
+        tableClients.isUserInteractionEnabled = false
+        
         MainController.reloadCLient() {
-            self.tableClients.reloadData()
+            DispatchQueue.main.async {
+                self.tableClients.reloadData()
+                self.indicatorLoad.isHidden = true
+                self.profileButton.isUserInteractionEnabled = true
+                self.addButton.isUserInteractionEnabled = true
+                self.tableClients.isUserInteractionEnabled = true
+            }
         }
         mainView.backgroundColor = ProfileCompanyController.colorMainBack
         backView.backgroundColor = ProfileCompanyController.colorBack
